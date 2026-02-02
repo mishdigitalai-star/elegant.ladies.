@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import InviteCodeScreen from './components/InviteCodeScreen';
-import VettingCouncilScreen from './components/VettingCouncilScreen';
-import ExpectationsScreen from './components/ExpectationsScreen';
-import AgreementScreen from './components/AgreementScreen';
-import WelcomeScreen from './components/WelcomeScreen';
+import InviteCodeScreen from './InviteCodeScreen';
+import VettingCouncilScreen from './VettingCouncilScreen';
+import ExpectationsScreen from './ExpectationsScreen';
+import AgreementScreen from './AgreementScreen';
+import WelcomeScreen from './WelcomeScreen';
 
 type Screen = 'invite' | 'vetting' | 'expectations' | 'agreement' | 'welcome';
 
