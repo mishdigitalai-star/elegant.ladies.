@@ -4,11 +4,34 @@ import VettingCouncilScreen from './VettingCouncilScreen';
 import ExpectationsScreen from './ExpectationsScreen';
 import AgreementScreen from './AgreementScreen';
 import WelcomeScreen from './WelcomeScreen';
+import { submitMemberToAirtable } from './airtableService';
 
 type Screen = 'invite' | 'vetting' | 'expectations' | 'agreement' | 'welcome';
 
+interface MemberFormData {
+  name: string;
+  email: string;
+  vettingStatus: 'Yes' | 'No';
+  vettingDate: string;
+  vettingTime: string;
+  vettingCouncilMembers: string;
+  expectationsAccepted: boolean;
+  agreementSignedName: string;
+}
+
 function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('invite');
+  const [formData, setFormData] = useState<MemberFormData>({
+    name: '',
+    email: '',
+    vettingStatus: 'No',
+    vettingDate: '',
+    vettingTime: '',
+    vettingCouncilMembers: '',
+    expectationsAccepted: false,
+    agreementSignedName: '',
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (currentScreen === 'vetting') {
@@ -30,8 +53,22 @@ function App() {
     setCurrentScreen('vetting');
   };
 
-  const handleVettingContinue = () => {
-    setCurrentScreen('expectations');
+  const handleVettingContinue = (data: {
+    hadMeeting: boolean;
+    meetingDate?: string;
+    meetingTime?: string;
+    councilMembers?: string;
+  }) => {
+    if (data.hadMeeting) {
+      setFormData({
+        ...formData,
+        vettingStatus: 'Yes',
+        vettingDate: data.meetingDate || '',
+        vettingTime: data.meetingTime || '',
+        vettingCouncilMembers: data.councilMembers || '',
+      });
+      setCurrentScreen('expectations');
+    }
   };
 
   const handleVettingBack = () => {
@@ -39,14 +76,57 @@ function App() {
   };
 
   const handleExpectationsContinue = () => {
+    setFormData({
+      ...formData,
+      expectationsAccepted: true,
+    });
     setCurrentScreen('agreement');
   };
 
-  const handleAgreementSubmit = () => {
-    setCurrentScreen('welcome');
+  const handleAgreementSubmit = async (signedName: string) => {
+    const agreementDate = new Date().toISOString().split('T')[0];
+    
+    const finalData = {
+      ...formData,
+      agreementSignedName: signedName,
+    };
+
+    setIsSubmitting(true);
+
+    // Submit to Airtable
+    const success = await submitMemberToAirtable({
+      name: finalData.agreementSignedName,
+      email: finalData.email,
+      vettingStatus: finalData.vettingStatus,
+      vettingDate: finalData.vettingDate,
+      vettingTime: finalData.vettingTime,
+      vettingCouncilMembers: finalData.vettingCouncilMembers,
+      expectationsAccepted: finalData.expectationsAccepted,
+      agreementSignedName: finalData.agreementSignedName,
+      agreementSignedDate: agreementDate,
+    });
+
+    setIsSubmitting(false);
+
+    if (success) {
+      setCurrentScreen('welcome');
+    } else {
+      alert('There was an error submitting your application. Please try again or contact support.');
+    }
   };
 
   const handleWelcomeComplete = () => {
+    // Reset form and go back to start
+    setFormData({
+      name: '',
+      email: '',
+      vettingStatus: 'No',
+      vettingDate: '',
+      vettingTime: '',
+      vettingCouncilMembers: '',
+      expectationsAccepted: false,
+      agreementSignedName: '',
+    });
     setCurrentScreen('invite');
   };
 
@@ -65,7 +145,10 @@ function App() {
         <ExpectationsScreen onContinue={handleExpectationsContinue} />
       )}
       {currentScreen === 'agreement' && (
-        <AgreementScreen onSubmit={handleAgreementSubmit} />
+        <AgreementScreen 
+          onSubmit={handleAgreementSubmit}
+          isSubmitting={isSubmitting}
+        />
       )}
       {currentScreen === 'welcome' && (
         <WelcomeScreen onComplete={handleWelcomeComplete} />

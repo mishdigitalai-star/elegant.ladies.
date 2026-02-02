@@ -1,131 +1,126 @@
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 
 interface AgreementScreenProps {
-  onSubmit: () => void;
+  onSubmit: (signedName: string) => void;
+  isSubmitting: boolean;
 }
 
-export default function AgreementScreen({ onSubmit }: AgreementScreenProps) {
-  const [fullName, setFullName] = useState('');
-  const [agreed, setAgreed] = useState(false);
-  const [error, setError] = useState('');
+const coreValues = [
+  {
+    title: 'Belonging & Inclusivity',
+    description: 'We create a welcoming space where every woman feels valued and included.',
+  },
+  {
+    title: 'Empowerment & Growth',
+    description: 'We support each other in reaching our full potential through mentorship and opportunities.',
+  },
+  {
+    title: 'Authentic Connection & Sisterhood',
+    description: 'We build genuine relationships based on trust, respect, and mutual support.',
+  },
+  {
+    title: 'Well-being & Self-Care',
+    description: 'We prioritize mental, physical, and emotional health for ourselves and each other.',
+  },
+  {
+    title: 'Impact & Advocacy',
+    description: 'We use our collective voice to create positive change in our community and beyond.',
+  },
+];
 
-  const coreValues = [
-    {
-      title: 'Sisterhood',
-      description: 'We support and uplift one another with genuine care and respect',
-    },
-    {
-      title: 'Excellence',
-      description: 'We strive for quality in all our endeavors and interactions',
-    },
-    {
-      title: 'Integrity',
-      description: 'We maintain honesty, transparency, and ethical conduct',
-    },
-    {
-      title: 'Empowerment',
-      description: 'We encourage personal growth and celebrate each other\'s success',
-    },
-    {
-      title: 'Community',
-      description: 'We actively engage and contribute to our collective wellbeing',
-    },
-  ];
+export default function AgreementScreen({ onSubmit, isSubmitting }: AgreementScreenProps) {
+  const [signedName, setSignedName] = useState('');
+  const [agreed, setAgreed] = useState(false);
 
   const handleSubmit = () => {
-    if (!fullName.trim()) {
-      setError('Please enter your full name');
+    if (!signedName.trim()) {
+      alert('Please enter your full name');
       return;
     }
     if (!agreed) {
-      setError('Please agree to the terms');
+      alert('Please check the agreement box');
       return;
     }
-    setError('');
-    onSubmit();
+    onSubmit(signedName);
   };
 
   return (
-    <div className="min-h-screen bg-brand-ivory flex items-center justify-center p-6 py-12">
-      <div className="w-full max-w-2xl">
-        <div className="bg-white rounded-3xl shadow-lg p-8 space-y-6">
-          <div className="flex justify-center mb-6">
-            <img
-              src="/elegant_ladies_logo.png"
-              alt="Elegant Ladies Logo"
-              className="w-[300px] max-w-full object-contain"
+    <div className="min-h-screen bg-brand-ivory flex items-center justify-center p-4">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-white rounded-2xl shadow-xl p-8 md:p-12 max-w-3xl w-full"
+      >
+        <div className="text-center mb-8">
+          <img
+            src="/elegant_ladies_logo_transparent.png"
+            alt="Elegant Ladies Logo"
+            className="w-64 h-auto mx-auto mb-6"
+          />
+          <h1 className="text-4xl font-serif text-brand-brown mb-2">Our Core Values</h1>
+          <p className="text-brand-orange text-xl font-semibold">The Elegant Ladies Sisterhood</p>
+        </div>
+
+        <div className="space-y-6 mb-8">
+          {coreValues.map((value, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.1 }}
+              className="border-l-4 border-brand-orange pl-4 py-2"
+            >
+              <h3 className="text-xl font-serif text-brand-brown mb-1">{value.title}</h3>
+              <p className="text-brand-brown text-opacity-80">{value.description}</p>
+            </motion.div>
+          ))}
+        </div>
+
+        <div className="bg-brand-orange bg-opacity-10 rounded-lg p-6 mb-6">
+          <p className="text-brand-brown text-center font-medium">
+            Receipt of Welcome Pack and payment of dues signifies agreement to uphold these values and
+            participate actively in our sisterhood.
+          </p>
+        </div>
+
+        <div className="space-y-4">
+          <div>
+            <label className="block text-brand-brown font-medium mb-2">
+              Sign with Your Full Name
+            </label>
+            <input
+              type="text"
+              value={signedName}
+              onChange={(e) => setSignedName(e.target.value)}
+              placeholder="Your full name"
+              className="w-full px-4 py-3 border-2 border-brand-orange rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-orange"
+              disabled={isSubmitting}
             />
           </div>
 
-          <h2 className="font-serif text-3xl font-bold text-brand-brown text-center">
-            Agreement
-          </h2>
+          <label className="flex items-start gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={agreed}
+              onChange={(e) => setAgreed(e.target.checked)}
+              className="mt-1 w-5 h-5 text-brand-orange border-brand-orange rounded focus:ring-brand-orange"
+              disabled={isSubmitting}
+            />
+            <span className="text-brand-brown">
+              I agree to uphold the Elegant Ladies core values and participate actively in our sisterhood
+            </span>
+          </label>
 
-          <div className="space-y-4 pt-4">
-            <h3 className="font-serif text-xl font-semibold text-brand-brown text-center mb-4">
-              Our Core Values
-            </h3>
-
-            {coreValues.map((value, index) => (
-              <div
-                key={index}
-                className="bg-brand-ivory bg-opacity-50 rounded-xl p-4 border-l-4 border-brand-orange"
-              >
-                <h4 className="font-semibold text-brand-brown text-lg mb-1">
-                  {index + 1}. {value.title}
-                </h4>
-                <p className="text-brand-brown text-sm leading-relaxed">
-                  {value.description}
-                </p>
-              </div>
-            ))}
-
-            <div className="bg-brand-gold bg-opacity-20 rounded-xl p-4 mt-6">
-              <p className="text-brand-brown text-center leading-relaxed italic">
-                Receipt of the Welcome Pack and payment of dues signifies agreement to abide by the terms of this arrangement
-              </p>
-            </div>
-
-            <div className="space-y-4 pt-4">
-              <div>
-                <label className="block text-brand-brown font-medium mb-2">
-                  Type your full name as signature
-                </label>
-                <input
-                  type="text"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  className="w-full px-4 py-3 border-2 border-brand-gold rounded-lg focus:outline-none focus:border-brand-orange transition-colors text-brand-brown font-serif text-lg"
-                  placeholder="Your Full Name"
-                />
-              </div>
-
-              <label className="flex items-start space-x-3 cursor-pointer group">
-                <input
-                  type="checkbox"
-                  checked={agreed}
-                  onChange={(e) => setAgreed(e.target.checked)}
-                  className="mt-1 w-5 h-5 text-brand-orange focus:ring-brand-orange border-brand-gold rounded cursor-pointer"
-                />
-                <span className="text-brand-brown leading-relaxed group-hover:text-brand-orange transition-colors">
-                  I agree to the terms
-                </span>
-              </label>
-
-              {error && (
-                <p className="text-red-600 text-sm">{error}</p>
-              )}
-
-              <button
-                onClick={handleSubmit}
-                className="w-full bg-brand-orange text-brand-ivory py-4 rounded-lg font-semibold text-lg shadow-md hover:bg-opacity-90 transition-all active:scale-95"
-              >
-                Submit
-              </button>
-            </div>
-          </div>
+          <button
+            onClick={handleSubmit}
+            disabled={isSubmitting}
+            className="w-full bg-brand-orange text-white py-4 rounded-lg text-xl font-semibold hover:bg-opacity-90 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isSubmitting ? 'Submitting...' : 'Submit Application'}
+          </button>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
