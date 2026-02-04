@@ -2,19 +2,22 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 
 interface ExpectationsScreenProps {
-  onContinue: () => void;
+  onSubmit: (signedName: string) => void;
+  isSubmitting: boolean;
 }
 
 const expectations = [
-  "I agree to interact with fellow Elegant Ladies with our core values and principles of Sisterhood",
+  'I agree to interact with fellow Elegant Ladies with our core values and principles of Sisterhood',
   "Life gets busy, but I'll attend social gatherings, events and outings when possible",
   "I'll be a member for at least 6 months before inviting Elegant Ladies to any party or celebration",
-  "I'll pay the standard joining fee of £50 due immediately upon joining",
-  "I'll pay the yearly dues of £100 due by 31st March 2026 (payment plans available)",
+  'I'll pay the standard joining fee of £50 due immediately upon joining',
+  'I'll pay the yearly dues of £100 due by 31st March 2026 (payment plans available)',
 ];
 
-export default function ExpectationsScreen({ onContinue }: ExpectationsScreenProps) {
+export default function ExpectationsScreen({ onSubmit, isSubmitting }: ExpectationsScreenProps) {
   const [checkedItems, setCheckedItems] = useState<boolean[]>(new Array(expectations.length).fill(false));
+  const [signedName, setSignedName] = useState('');
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
 
   const handleCheckboxChange = (index: number) => {
     const newCheckedItems = [...checkedItems];
@@ -24,12 +27,20 @@ export default function ExpectationsScreen({ onContinue }: ExpectationsScreenPro
 
   const allChecked = checkedItems.every((item) => item === true);
 
-  const handleContinue = () => {
+  const handleSubmit = () => {
     if (!allChecked) {
-      alert('Please check all expectation boxes to continue');
+      alert('Please check all expectation boxes');
       return;
     }
-    onContinue();
+    if (!signedName.trim()) {
+      alert('Please enter your full name');
+      return;
+    }
+    if (!agreedToTerms) {
+      alert('Please agree to uphold the Elegant Ladies core values');
+      return;
+    }
+    onSubmit(signedName);
   };
 
   return (
@@ -62,19 +73,56 @@ export default function ExpectationsScreen({ onContinue }: ExpectationsScreenPro
                 checked={checkedItems[index]}
                 onChange={() => handleCheckboxChange(index)}
                 className="mt-1 w-5 h-5 text-brand-orange border-brand-orange rounded focus:ring-brand-orange"
+                disabled={isSubmitting}
               />
               <span className="text-brand-brown">{expectation}</span>
             </motion.label>
           ))}
         </div>
 
-        <button
-          onClick={handleContinue}
-          disabled={!allChecked}
-          className="w-full bg-brand-orange text-white py-4 rounded-lg text-xl font-semibold hover:bg-opacity-90 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Continue
-        </button>
+        <div className="bg-brand-orange bg-opacity-10 rounded-lg p-6 mb-6">
+          <p className="text-brand-brown text-center font-medium">
+            Receipt of Welcome Pack and payment of dues signifies agreement to uphold these values and
+            participate actively in our sisterhood.
+          </p>
+        </div>
+
+        <div className="space-y-4">
+          <div>
+            <label className="block text-brand-brown font-medium mb-2">
+              Sign with Your Full Name
+            </label>
+            <input
+              type="text"
+              value={signedName}
+              onChange={(e) => setSignedName(e.target.value)}
+              placeholder="Your full name"
+              className="w-full px-4 py-3 border-2 border-brand-orange rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-orange"
+              disabled={isSubmitting}
+            />
+          </div>
+
+          <label className="flex items-start gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={agreedToTerms}
+              onChange={(e) => setAgreedToTerms(e.target.checked)}
+              className="mt-1 w-5 h-5 text-brand-orange border-brand-orange rounded focus:ring-brand-orange"
+              disabled={isSubmitting}
+            />
+            <span className="text-brand-brown">
+              I agree to uphold the Elegant Ladies core values and participate actively in our sisterhood
+            </span>
+          </label>
+
+          <button
+            onClick={handleSubmit}
+            disabled={isSubmitting || !allChecked}
+            className="w-full bg-brand-orange text-white py-4 rounded-lg text-xl font-semibold hover:bg-opacity-90 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isSubmitting ? 'Submitting...' : 'Submit Application'}
+          </button>
+        </div>
       </motion.div>
     </div>
   );

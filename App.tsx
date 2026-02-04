@@ -6,7 +6,7 @@ import AgreementScreen from './AgreementScreen';
 import WelcomeScreen from './WelcomeScreen';
 import { submitMemberToAirtable } from './airtableService';
 
-type Screen = 'invite' | 'vetting' | 'expectations' | 'agreement' | 'welcome';
+type Screen = 'invite' | 'vetting' | 'agreement' | 'expectations' | 'welcome';
 
 interface MemberFormData {
   name: string;
@@ -67,7 +67,7 @@ function App() {
         vettingTime: data.meetingTime || '',
         vettingCouncilMembers: data.councilMembers || '',
       });
-      setCurrentScreen('expectations');
+      setCurrentScreen('agreement');
     }
   };
 
@@ -75,19 +75,17 @@ function App() {
     setCurrentScreen('invite');
   };
 
-  const handleExpectationsContinue = () => {
-    setFormData({
-      ...formData,
-      expectationsAccepted: true,
-    });
-    setCurrentScreen('agreement');
+  const handleAgreementContinue = () => {
+    // Core values accepted, move to expectations
+    setCurrentScreen('expectations');
   };
 
-  const handleAgreementSubmit = async (signedName: string) => {
+  const handleExpectationsSubmit = async (signedName: string) => {
     const agreementDate = new Date().toISOString().split('T')[0];
     
     const finalData = {
       ...formData,
+      expectationsAccepted: true,
       agreementSignedName: signedName,
     };
 
@@ -141,12 +139,12 @@ function App() {
           onBack={handleVettingBack}
         />
       )}
-      {currentScreen === 'expectations' && (
-        <ExpectationsScreen onContinue={handleExpectationsContinue} />
-      )}
       {currentScreen === 'agreement' && (
-        <AgreementScreen 
-          onSubmit={handleAgreementSubmit}
+        <AgreementScreen onContinue={handleAgreementContinue} />
+      )}
+      {currentScreen === 'expectations' && (
+        <ExpectationsScreen 
+          onSubmit={handleExpectationsSubmit}
           isSubmitting={isSubmitting}
         />
       )}

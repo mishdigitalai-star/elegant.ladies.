@@ -1,9 +1,7 @@
-import { useState } from 'react';
 import { motion } from 'framer-motion';
 
 interface AgreementScreenProps {
-  onSubmit: (signedName: string) => void;
-  isSubmitting: boolean;
+  onContinue: () => void;
 }
 
 const coreValues = [
@@ -29,22 +27,7 @@ const coreValues = [
   },
 ];
 
-export default function AgreementScreen({ onSubmit, isSubmitting }: AgreementScreenProps) {
-  const [signedName, setSignedName] = useState('');
-  const [agreed, setAgreed] = useState(false);
-
-  const handleSubmit = () => {
-    if (!signedName.trim()) {
-      alert('Please enter your full name');
-      return;
-    }
-    if (!agreed) {
-      alert('Please check the agreement box');
-      return;
-    }
-    onSubmit(signedName);
-  };
-
+export default function AgreementScreen({ onContinue }: AgreementScreenProps) {
   return (
     <div className="min-h-screen bg-brand-ivory flex items-center justify-center p-4">
       <motion.div
@@ -79,47 +62,16 @@ export default function AgreementScreen({ onSubmit, isSubmitting }: AgreementScr
 
         <div className="bg-brand-orange bg-opacity-10 rounded-lg p-6 mb-6">
           <p className="text-brand-brown text-center font-medium">
-            Receipt of Welcome Pack and payment of dues signifies agreement to uphold these values and
-            participate actively in our sisterhood.
+            These values guide everything we do as Elegant Ladies. In the next step, you'll review and agree to our membership expectations.
           </p>
         </div>
 
-        <div className="space-y-4">
-          <div>
-            <label className="block text-brand-brown font-medium mb-2">
-              Sign with Your Full Name
-            </label>
-            <input
-              type="text"
-              value={signedName}
-              onChange={(e) => setSignedName(e.target.value)}
-              placeholder="Your full name"
-              className="w-full px-4 py-3 border-2 border-brand-orange rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-orange"
-              disabled={isSubmitting}
-            />
-          </div>
-
-          <label className="flex items-start gap-3 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={agreed}
-              onChange={(e) => setAgreed(e.target.checked)}
-              className="mt-1 w-5 h-5 text-brand-orange border-brand-orange rounded focus:ring-brand-orange"
-              disabled={isSubmitting}
-            />
-            <span className="text-brand-brown">
-              I agree to uphold the Elegant Ladies core values and participate actively in our sisterhood
-            </span>
-          </label>
-
-          <button
-            onClick={handleSubmit}
-            disabled={isSubmitting}
-            className="w-full bg-brand-orange text-white py-4 rounded-lg text-xl font-semibold hover:bg-opacity-90 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isSubmitting ? 'Submitting...' : 'Submit Application'}
-          </button>
-        </div>
+        <button
+          onClick={onContinue}
+          className="w-full bg-brand-orange text-white py-4 rounded-lg text-xl font-semibold hover:bg-opacity-90 transition-all shadow-lg"
+        >
+          Continue to Expectations
+        </button>
       </motion.div>
     </div>
   );
