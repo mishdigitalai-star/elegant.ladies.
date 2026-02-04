@@ -82,8 +82,7 @@ export default function ExpectationsScreen({ onSubmit, isSubmitting }: Expectati
 
         <div className="bg-brand-orange bg-opacity-10 rounded-lg p-6 mb-6">
           <p className="text-brand-brown text-center font-medium">
-            Receipt of Welcome Pack and payment of dues signifies agreement to uphold these values and
-            participate actively in our sisterhood.
+            By completing this application and paying membership fees, you agree to uphold these values and participate actively with the Elegant Ladies Group.
           </p>
         </div>
 
