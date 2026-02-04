@@ -49,8 +49,8 @@ export default function InviteCodeScreen({ onValidCode }: InviteCodeScreenProps)
                 setCode(e.target.value);
                 setError('');
               }}
-              className="w-full px-4 py-3 border-2 border-brand-orange rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-orange text-center text-lg uppercase"
-              placeholder="ENTER CODE"
+              className="w-full px-4 py-3 border-2 border-brand-orange rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-orange text-center text-lg"
+              placeholder="Enter code"
             />
             {error && (
               <p className="text-red-600 text-sm mt-2">{error}</p>
