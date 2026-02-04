@@ -1,98 +1,81 @@
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 
 interface ExpectationsScreenProps {
   onContinue: () => void;
 }
 
+const expectations = [
+  'I agree to interact with fellow Elegant Ladies with our core values and principles of Sisterhood',
+  "Life gets busy, but I'll attend social gatherings, events and outings when possible",
+  "I'll be a member for at least 6 months before inviting Elegant Ladies to any party or celebration",
+  'I'll pay the standard joining fee of £50 due immediately upon joining',
+  'I'll pay the yearly dues of £100 due by 31st March 2026 (payment plans available)',
+];
+
 export default function ExpectationsScreen({ onContinue }: ExpectationsScreenProps) {
-  const [agreements, setAgreements] = useState({
-    sisterhood: false,
-    attendance: false,
-    membershipDuration: false,
-    joiningFee: false,
-    yearlyDues: false,
-  });
+  const [checkedItems, setCheckedItems] = useState<boolean[]>(new Array(expectations.length).fill(false));
 
-  const expectations = [
-    {
-      id: 'sisterhood',
-      text: 'I agree to interact with fellow Elegant Ladies with our core values and principles of Sisterhood',
-    },
-    {
-      id: 'attendance',
-      text: "Life gets busy, but I'll attend social gatherings, events and outings when possible",
-    },
-    {
-      id: 'membershipDuration',
-      text: "I'll be a member for at least 6 months before inviting Elegant Ladies to any party or celebration",
-    },
-    {
-      id: 'joiningFee',
-      text: "I'll pay the standard joining fee of £50 due immediately upon joining",
-    },
-    {
-      id: 'yearlyDues',
-      text: "I'll pay the yearly dues of £100 due by 31st March 2026 (payment plans available)",
-    },
-  ];
-
-  const handleCheckboxChange = (id: string) => {
-    setAgreements((prev) => ({
-      ...prev,
-      [id]: !prev[id as keyof typeof prev],
-    }));
+  const handleCheckboxChange = (index: number) => {
+    const newCheckedItems = [...checkedItems];
+    newCheckedItems[index] = !newCheckedItems[index];
+    setCheckedItems(newCheckedItems);
   };
 
-  const allChecked = Object.values(agreements).every((val) => val);
+  const allChecked = checkedItems.every((item) => item === true);
+
+  const handleContinue = () => {
+    if (!allChecked) {
+      alert('Please check all expectation boxes to continue');
+      return;
+    }
+    onContinue();
+  };
 
   return (
-    <div className="min-h-screen bg-brand-ivory flex items-center justify-center p-6 py-12">
-      <div className="w-full max-w-2xl">
-        <div className="bg-white rounded-3xl shadow-lg p-8 space-y-6">
-          <div className="flex justify-center mb-6">
-            <img
-              src="/elegant_ladies_logo.png"
-              alt="Elegant Ladies Logo"
-              className="w-[300px] max-w-full object-contain"
-            />
-          </div>
-
-          <h2 className="font-serif text-3xl font-bold text-brand-brown text-center">
-            Expectations
-          </h2>
-
-          <div className="space-y-4 pt-4">
-            {expectations.map((expectation) => (
-              <label
-                key={expectation.id}
-                className="flex items-start space-x-3 cursor-pointer group"
-              >
-                <input
-                  type="checkbox"
-                  checked={agreements[expectation.id as keyof typeof agreements]}
-                  onChange={() => handleCheckboxChange(expectation.id)}
-                  className="mt-1 w-5 h-5 text-brand-orange focus:ring-brand-orange border-brand-gold rounded cursor-pointer"
-                />
-                <span className="text-brand-brown leading-relaxed group-hover:text-brand-orange transition-colors">
-                  {expectation.text}
-                </span>
-              </label>
-            ))}
-          </div>
-
-          <button
-            onClick={onContinue}
-            disabled={!allChecked}
-            className={`w-full py-4 rounded-lg font-semibold text-lg shadow-md transition-all ${
-              allChecked
-                ? 'bg-brand-orange text-brand-ivory hover:bg-opacity-90 active:scale-95 cursor-pointer'
-                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-            }`}
-          >
-            Continue
-          </button>
+    <div className="min-h-screen bg-brand-ivory flex items-center justify-center p-4">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-white rounded-2xl shadow-xl p-8 md:p-12 max-w-3xl w-full"
+      >
+        <div className="text-center mb-8">
+          <img
+            src="/elegant_ladies_logo.png"
+            alt="Elegant Ladies Logo"
+            className="w-64 h-auto mx-auto mb-6"
+          />
+          <h1 className="text-4xl font-serif text-brand-brown mb-2">Expectations</h1>
         </div>
-      </div>
+
+        <div className="space-y-4 mb-8">
+          {expectations.map((expectation, index) => (
+            <motion.label
+              key={index}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.1 }}
+              className="flex items-start gap-3 cursor-pointer p-4 rounded-lg hover:bg-brand-ivory transition-colors"
+            >
+              <input
+                type="checkbox"
+                checked={checkedItems[index]}
+                onChange={() => handleCheckboxChange(index)}
+                className="mt-1 w-5 h-5 text-brand-orange border-brand-orange rounded focus:ring-brand-orange"
+              />
+              <span className="text-brand-brown">{expectation}</span>
+            </motion.label>
+          ))}
+        </div>
+
+        <button
+          onClick={handleContinue}
+          disabled={!allChecked}
+          className="w-full bg-brand-orange text-white py-4 rounded-lg text-xl font-semibold hover:bg-opacity-90 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Continue
+        </button>
+      </motion.div>
     </div>
   );
 }

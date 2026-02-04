@@ -54,7 +54,7 @@ export default function AgreementScreen({ onSubmit, isSubmitting }: AgreementScr
       >
         <div className="text-center mb-8">
           <img
-            src="/elegant_ladies_logo_transparent.png"
+            src="/elegant_ladies_logo.png"
             alt="Elegant Ladies Logo"
             className="w-64 h-auto mx-auto mb-6"
           />
