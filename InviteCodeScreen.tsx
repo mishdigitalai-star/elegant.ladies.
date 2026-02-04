@@ -11,7 +11,7 @@ export default function InviteCodeScreen({ onValidCode }: InviteCodeScreenProps)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (code.toUpperCase() === 'ELEGANTLADIES2025') {
+    if (code === 'Welcome 2026') {
       onValidCode();
     } else {
       setError('Invalid invite code. Please check and try again.');
