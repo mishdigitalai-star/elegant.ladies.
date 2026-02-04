@@ -7,11 +7,11 @@ interface ExpectationsScreenProps {
 }
 
 const expectations = [
-  'I agree to interact with fellow Elegant Ladies with our core values and principles of Sisterhood',
+  "I agree to interact with fellow Elegant Ladies with our core values and principles of Sisterhood",
   "Life gets busy, but I'll attend social gatherings, events and outings when possible",
   "I'll be a member for at least 6 months before inviting Elegant Ladies to any party or celebration",
-  'I'll pay the standard joining fee of £50 due immediately upon joining',
-  'I'll pay the yearly dues of £100 due by 31st March 2026 (payment plans available)',
+  "I'll pay the standard joining fee of £50 due immediately upon joining",
+  "I'll pay the yearly dues of £100 due by 31st March 2026 (payment plans available)",
 ];
 
 export default function ExpectationsScreen({ onSubmit, isSubmitting }: ExpectationsScreenProps) {
