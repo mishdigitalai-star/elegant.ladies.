@@ -81,7 +81,7 @@ export default function CodeOfConductScreen({ onContinue }: CodeOfConductScreenP
       >
         <div className="text-center mb-8">
           <img
-            src="/elegant_ladies_logo_new.jpg"
+            src="/elegant_ladies_logo.png"
             alt="Elegant Ladies Logo"
             className="w-64 h-auto mx-auto mb-6"
           />
@@ -132,7 +132,7 @@ export default function CodeOfConductScreen({ onContinue }: CodeOfConductScreenP
             className="mt-1 w-5 h-5 text-brand-orange border-brand-orange rounded focus:ring-brand-orange"
           />
           <span className="text-brand-brown font-medium">
-            I have read and agree to uphold the Elegant Ladies Code of Conduct
+            I have read and agree to uphold the Code of Conduct and the Core Values of Elegant Ladies
           </span>
         </label>
 

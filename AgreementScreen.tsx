@@ -62,7 +62,7 @@ export default function AgreementScreen({ onContinue }: AgreementScreenProps) {
 
         <div className="bg-brand-orange bg-opacity-10 rounded-lg p-6 mb-6">
           <p className="text-brand-brown text-center font-medium">
-            These values guide everything we do as Elegant Ladies. In the next step, you'll review and agree to our membership expectations.
+            These values guide everything we do as Elegant Ladies. In the next step, you'll review and agree to our Code of Conduct.
           </p>
         </div>
 
@@ -70,7 +70,7 @@ export default function AgreementScreen({ onContinue }: AgreementScreenProps) {
           onClick={onContinue}
           className="w-full bg-brand-orange text-white py-4 rounded-lg text-xl font-semibold hover:bg-opacity-90 transition-all shadow-lg"
         >
-          Continue to Expectations
+          Continue to Code of Conduct
         </button>
       </motion.div>
     </div>
