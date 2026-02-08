@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 
 interface ExpectationsScreenProps {
-  onSubmit: (signedName: string) => void;
+  onSubmit: (data: { signedName: string; email: string; phone: string }) => void;
   isSubmitting: boolean;
 }
 
@@ -17,6 +17,8 @@ const expectations = [
 export default function ExpectationsScreen({ onSubmit, isSubmitting }: ExpectationsScreenProps) {
   const [checkedItems, setCheckedItems] = useState<boolean[]>(new Array(expectations.length).fill(false));
   const [signedName, setSignedName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [agreedToTerms, setAgreedToTerms] = useState(false);
 
   const handleCheckboxChange = (index: number) => {
@@ -36,11 +38,19 @@ export default function ExpectationsScreen({ onSubmit, isSubmitting }: Expectati
       alert('Please enter your full name');
       return;
     }
-    if (!agreedToTerms) {
-      alert('Please agree to uphold the Elegant Ladies core values');
+    if (!email.trim()) {
+      alert('Please enter your email address');
       return;
     }
-    onSubmit(signedName);
+    if (!phone.trim()) {
+      alert('Please enter your phone number');
+      return;
+    }
+    if (!agreedToTerms) {
+      alert('Please agree to uphold the Elegant Ladies core values and Code of Conduct');
+      return;
+    }
+    onSubmit({ signedName, email, phone });
   };
 
   return (
@@ -101,6 +111,34 @@ export default function ExpectationsScreen({ onSubmit, isSubmitting }: Expectati
             />
           </div>
 
+          <div>
+            <label className="block text-brand-brown font-medium mb-2">
+              Email
+            </label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="your.email@example.com"
+              className="w-full px-4 py-3 border-2 border-brand-orange rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-orange"
+              disabled={isSubmitting}
+            />
+          </div>
+
+          <div>
+            <label className="block text-brand-brown font-medium mb-2">
+              Phone
+            </label>
+            <input
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="07XXX XXXXXX"
+              className="w-full px-4 py-3 border-2 border-brand-orange rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-orange"
+              disabled={isSubmitting}
+            />
+          </div>
+
           <label className="flex items-start gap-3 cursor-pointer">
             <input
               type="checkbox"
@@ -110,7 +148,7 @@ export default function ExpectationsScreen({ onSubmit, isSubmitting }: Expectati
               disabled={isSubmitting}
             />
             <span className="text-brand-brown">
-              I agree to uphold the Elegant Ladies core values and participate actively in our sisterhood
+              I agree to uphold the Elegant Ladies Core Values, Code of Conduct and Participate actively in our sisterhood
             </span>
           </label>
 

@@ -11,6 +11,7 @@ type Screen = 'invite' | 'vetting' | 'agreement' | 'expectations' | 'welcome';
 interface MemberFormData {
   name: string;
   email: string;
+  phone: string;
   vettingStatus: 'Yes' | 'No';
   vettingDate: string;
   vettingTime: string;
@@ -24,6 +25,7 @@ function App() {
   const [formData, setFormData] = useState<MemberFormData>({
     name: '',
     email: '',
+    phone: '',
     vettingStatus: 'No',
     vettingDate: '',
     vettingTime: '',
@@ -80,13 +82,16 @@ function App() {
     setCurrentScreen('expectations');
   };
 
-  const handleExpectationsSubmit = async (signedName: string) => {
+  const handleExpectationsSubmit = async (data: { signedName: string; email: string; phone: string }) => {
     const agreementDate = new Date().toISOString().split('T')[0];
     
     const finalData = {
       ...formData,
+      name: data.signedName,
+      email: data.email,
+      phone: data.phone,
       expectationsAccepted: true,
-      agreementSignedName: signedName,
+      agreementSignedName: data.signedName,
     };
 
     setIsSubmitting(true);
@@ -95,6 +100,7 @@ function App() {
     const success = await submitMemberToAirtable({
       name: finalData.agreementSignedName,
       email: finalData.email,
+      phone: finalData.phone,
       vettingStatus: finalData.vettingStatus,
       vettingDate: finalData.vettingDate,
       vettingTime: finalData.vettingTime,
@@ -118,6 +124,7 @@ function App() {
     setFormData({
       name: '',
       email: '',
+      phone: '',
       vettingStatus: 'No',
       vettingDate: '',
       vettingTime: '',
