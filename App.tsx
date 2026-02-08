@@ -3,10 +3,11 @@ import InviteCodeScreen from './InviteCodeScreen';
 import VettingCouncilScreen from './VettingCouncilScreen';
 import ExpectationsScreen from './ExpectationsScreen';
 import AgreementScreen from './AgreementScreen';
+import CodeOfConductScreen from './CodeOfConductScreen';
 import WelcomeScreen from './WelcomeScreen';
 import { submitMemberToAirtable } from './airtableService';
 
-type Screen = 'invite' | 'vetting' | 'agreement' | 'expectations' | 'welcome';
+type Screen = 'invite' | 'vetting' | 'agreement' | 'conduct' | 'expectations' | 'welcome';
 
 interface MemberFormData {
   name: string;
@@ -78,7 +79,12 @@ function App() {
   };
 
   const handleAgreementContinue = () => {
-    // Core values accepted, move to expectations
+    // Core values accepted, move to Code of Conduct
+    setCurrentScreen('conduct');
+  };
+
+  const handleConductContinue = () => {
+    // Code of Conduct accepted, move to expectations
     setCurrentScreen('expectations');
   };
 
@@ -148,6 +154,9 @@ function App() {
       )}
       {currentScreen === 'agreement' && (
         <AgreementScreen onContinue={handleAgreementContinue} />
+      )}
+      {currentScreen === 'conduct' && (
+        <CodeOfConductScreen onContinue={handleConductContinue} />
       )}
       {currentScreen === 'expectations' && (
         <ExpectationsScreen 
